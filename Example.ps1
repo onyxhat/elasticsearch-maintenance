@@ -6,12 +6,5 @@ $esServers = "logstash-test.onyxhat.com","logstash-dev.onyxhat.com","logstash-pr
 $Indexes = $esServers | % { Get-EsIndexes -Server $_ -IndexPrefix "logstash" }
 
 ###Runtime
-$Indexes | % {
-    if ($_.Age.TotalDays -gt 28) {
-        $_.Delete()
-    }
-
-    if ($_.Age.TotalDays -lt 3) {
-        $_.Optimize()
-    }
-}
+$($Indexes | Where-Object { $_.Age.TotalDays -gt 28 }).Delete()
+$($Indexes | Where-Object { $_.Age.TotalDays -lt 3 }).Optimize()
