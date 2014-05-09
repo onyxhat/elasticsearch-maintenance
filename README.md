@@ -13,6 +13,10 @@ PowerShell module for common maintenance tasks in ElasticSearch.
 * __[More to Come](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices.html)__
 
 
+###Requirements
+* [PowerShell v4.0+](http://www.microsoft.com/en-us/download/details.aspx?id=40855)
+
+
 ###Getting Started
 PowerShell modules can be loaded by either copying the PSM1 and PSD1 files into your $env:PSModulePath or by directly referencing the PSD1 module manifest when calling [Import-Module](http://technet.microsoft.com/en-us/library/hh849725.aspx). Once imported the command Get-EsIndexes becomes available for use in the shell instance. The command returns a PowerShell object containing __NoteProperties__ of returned indicies and __ScriptMethods__ that can be called against them.
 
