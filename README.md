@@ -40,10 +40,10 @@ Get-EsIndexes -Server <ES FQDN or IP Address [Default=localhost]> -Port <ES Port
 |Index       |NoteProperty |System.String|
 |Port        |NoteProperty |System.Int32|
 |Server      |NoteProperty |System.String|
-|ClearCache  |ScriptMethod |System.Object ClearCache();|
-|CloseIndex  |ScriptMethod |System.Object CloseIndex();|
-|Delete      |ScriptMethod |System.Object Delete();|
-|Flush       |ScriptMethod |System.Object Flush();|
-|OpenIndex   |ScriptMethod |System.Object OpenIndex();|
-|Optimize    |ScriptMethod |System.Object Optimize();|
-|Refresh     |ScriptMethod |System.Object Refresh();|
+|ClearCache  |ScriptMethod |System.Object ClearCache()|
+|CloseIndex  |ScriptMethod |System.Object CloseIndex()|
+|Delete      |ScriptMethod |System.Object Delete()|
+|Flush       |ScriptMethod |System.Object Flush()|
+|OpenIndex   |ScriptMethod |System.Object OpenIndex()|
+|Optimize    |ScriptMethod |System.Object Optimize()|
+|Refresh     |ScriptMethod |System.Object Refresh()|
