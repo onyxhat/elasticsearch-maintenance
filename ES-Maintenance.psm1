@@ -2,99 +2,120 @@
 function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
     #Method Definitions
     $deleteMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Delete -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index)
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Delete -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index)
 
-            if ($response.StatusCode -eq 200) {
-                Write-Host -ForegroundColor Green -NoNewline "[DELETED]"
-            } else {
-                Write-Warning ("Returned " + $response.StatusCode + " response")
+                if ($response.StatusCode -eq 200) {
+                    Write-Host -ForegroundColor Green -NoNewline "[DELETED]"
+                    $this.Status = "Deleted"
+                } else {
+                    Write-Warning ("Returned " + $response.StatusCode + " response")
+                }
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
-
+        
         Write-Host (" - " + $this.Server + "/" + $this.Index)
     }
 
     $optimizeMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $this.Index + "/_optimize")
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $this.Index + "/_optimize")
 
-            if ($response.StatusCode -eq 200) {
-                $results = $($response.Content | ConvertFrom-Json)._shards
+                if ($response.StatusCode -eq 200) {
+                    $results = $($response.Content | ConvertFrom-Json)._shards
 
-                if ($results.failed -ne 0) {
-                    Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
-                } elseif ($results.successful -lt $results.total) {
-                    Write-Host -ForegroundColor DarkYellow -NoNewline "[WARN]"
+                    if ($results.failed -ne 0) {
+                        Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+                    } elseif ($results.successful -lt $results.total) {
+                        Write-Host -ForegroundColor DarkYellow -NoNewline "[WARN]"
+                    } else {
+                        Write-Host -ForegroundColor Green -NoNewline "[OPTIMIZED]"
+                    }
                 } else {
-                    Write-Host -ForegroundColor Green -NoNewline "[OPTIMIZED]"
+                    Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+                    $results = ("Returned " + $response.StatusCode + " response")
                 }
-            } else {
-                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
-                $results = ("Returned " + $response.StatusCode + " response")
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
 
         Write-Host (" - " + $this.Server + "/" + $this.Index + " ($results)")
     }
 
     $flushMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_flush")
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_flush")
 
-            if ($response.StatusCode -eq 200) {
-                Write-Host -ForegroundColor Green -NoNewline "[FLUSHED]"
-            } else {
-                Write-Warning ("Returned " + $response.StatusCode + " response")
+                if ($response.StatusCode -eq 200) {
+                    Write-Host -ForegroundColor Green -NoNewline "[FLUSHED]"
+                } else {
+                    Write-Warning ("Returned " + $response.StatusCode + " response")
+                }
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
 
         Write-Host (" - " + $this.Server + "/" + $this.Index)
     }
 
     $clearCacheMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_cache/clear")
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_cache/clear")
 
-            if ($response.StatusCode -eq 200) {
-                Write-Host -ForegroundColor Green -NoNewline "[CACHE_CLEARED]"
-            } else {
-                Write-Warning ("Returned " + $response.StatusCode + " response")
+                if ($response.StatusCode -eq 200) {
+                    Write-Host -ForegroundColor Green -NoNewline "[CACHE_CLEARED]"
+                } else {
+                    Write-Warning ("Returned " + $response.StatusCode + " response")
+                }
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
 
         Write-Host (" - " + $this.Server + "/" + $this.Index)
     }
 
     $refreshMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_refresh")
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_refresh")
 
-            if ($response.StatusCode -eq 200) {
-                Write-Host -ForegroundColor Green -NoNewline "[REFRESHED]"
-            } else {
-                Write-Warning ("Returned " + $response.StatusCode + " response")
+                if ($response.StatusCode -eq 200) {
+                    Write-Host -ForegroundColor Green -NoNewline "[REFRESHED]"
+                } else {
+                    Write-Warning ("Returned " + $response.StatusCode + " response")
+                }
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
 
         Write-Host (" - " + $this.Server + "/" + $this.Index)
@@ -106,6 +127,7 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
 
             if ($response.StatusCode -eq 200) {
                 Write-Host -ForegroundColor Green -NoNewline "[OPENED]"
+                $this.Status = "Online"
             } else {
                 Write-Warning ("Returned " + $response.StatusCode + " response")
             }
@@ -119,18 +141,23 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
     }
 
     $closeMethod = {
-        Try {
-            $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_close")
+        if ($this.Status -eq "Online") {
+            Try {
+                $response = Invoke-WebRequest -Method Post -Uri ("http://" + $this.Server + ":" + $this.Port + "/" + $This.Index + "/_close")
 
-            if ($response.StatusCode -eq 200) {
-                Write-Host -ForegroundColor Green -NoNewline "[CLOSED]"
-            } else {
-                Write-Warning ("Returned " + $response.StatusCode + " response")
+                if ($response.StatusCode -eq 200) {
+                    Write-Host -ForegroundColor Green -NoNewline "[CLOSED]"
+                    $this.Status = "Offline"
+                } else {
+                    Write-Warning ("Returned " + $response.StatusCode + " response")
+                }
             }
-        }
 
-        Catch {
-            Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            Catch {
+                Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
+            }
+        } else {
+            Write-Host -ForegroundColor Yellow -NoNewline "[SKIPPED]"
         }
 
         Write-Host (" - " + $this.Server + "/" + $this.Index)
@@ -144,6 +171,7 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
         $objIndex | Add-Member -MemberType NoteProperty -Name Port -Value $Port
         $objIndex | Add-Member -MemberType NoteProperty -Name Index -Value $i
         $objIndex | Add-Member -MemberType NoteProperty -Name Age -Value $(Get-EsIndexAge -Index $i)
+        $objIndex | Add-Member -MemberType NoteProperty -Name Status -Value "Online"
         $objIndex | Add-Member -MemberType ScriptMethod -Name Delete -Value $deleteMethod
         $objIndex | Add-Member -MemberType ScriptMethod -Name Optimize -Value $optimizeMethod
         $objIndex | Add-Member -MemberType ScriptMethod -Name Flush -Value $flushMethod
