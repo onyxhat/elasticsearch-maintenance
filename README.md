@@ -4,7 +4,7 @@ PowerShell module for common maintenance tasks in ElasticSearch.
 
 
 ###Supported APIs
-* [Delete API](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete.html)
+* [Delete](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete.html)
 * [Optimize](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html)
 * [Flush](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html)
 * [Clear Cache](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-clearcache.html)
