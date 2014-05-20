@@ -35,7 +35,7 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
                     if ($results.failed -ne 0) {
                         Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
                     } elseif ($results.successful -lt $results.total) {
-                        Write-Host -ForegroundColor DarkYellow -NoNewline "[WARN]"
+                        Write-Host -ForegroundColor Yellow -NoNewline "[WARN]"
                     } else {
                         Write-Host -ForegroundColor Green -NoNewline "[OPTIMIZED]"
                     }
