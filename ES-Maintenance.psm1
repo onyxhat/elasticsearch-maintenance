@@ -1,5 +1,12 @@
 ###Functions
-function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
+function New-IndexObject() {
+    [CmdletBinding()]
+    Param (
+        [string]$Server,
+        [int]$Port,
+        [string[]]$Indexes
+    )
+
     #Method Definitions
     $deleteMethod = {
         if ($this.Status -eq "Online") {
@@ -35,7 +42,7 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
                     if ($results.failed -ne 0) {
                         Write-Host -ForegroundColor Red -NoNewline "[ERROR]"
                     } elseif ($results.successful -lt $results.total) {
-                        Write-Host -ForegroundColor Yellow -NoNewline "[WARN]"
+                        Write-Host -ForegroundColor DarkYellow -NoNewline "[WARN]"
                     } else {
                         Write-Host -ForegroundColor Green -NoNewline "[OPTIMIZED]"
                     }
@@ -184,7 +191,13 @@ function New-IndexObject([string]$Server, [int]$Port, [string[]]$Indexes) {
     }
 }
 
-function Get-EsIndexAge([Parameter(Mandatory=$true)][string]$Index, [regex]$Pattern="^\w+[-\.](\d+)[-\.](\d+)[-\.](\d+)([-\.](\d+))*") {
+function Get-EsIndexAge() {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory=$true)][string]$Index,
+        [regex]$Pattern="^\w+[-\.](\d+)[-\.](\d+)[-\.](\d+)([-\.](\d+))*"
+    )
+
     if ($Index -match $Pattern) {
         switch($Matches.Count) {
             4 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date ($Matches[2] + "/" + $Matches[3] + "/" + $Matches[1])) } #Daily Indexes
@@ -195,7 +208,13 @@ function Get-EsIndexAge([Parameter(Mandatory=$true)][string]$Index, [regex]$Patt
     }
 }
 
-function Get-EsIndexes([string]$Server="localhost", [int]$Port=9200, [string]$IndexPrefix=".*") {
+function Get-EsIndexes() {
+    [CmdletBinding()]
+    Param (
+        [string]$Server="localhost",
+        [int]$Port=9200,
+        [string]$IndexPrefix=".*"
+    )
     Try {
         $response = Invoke-WebRequest -Method Get -Uri ("http://" + $Server + ":" + $Port + "/_aliases?pretty=true")
 
