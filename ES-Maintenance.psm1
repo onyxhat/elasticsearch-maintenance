@@ -200,8 +200,8 @@ function Get-EsIndexAge() {
 
     if ($Index -match $Pattern) {
         switch($Matches.Count) {
-            4 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date ($Matches[2] + "/" + $Matches[3] + "/" + $Matches[1])) } #Daily Indexes
-            6 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date ($Matches[2] + "/" + $Matches[3] + "/" + $Matches[1] + " " + $Matches[5] + ":00:00")) } #Hourly Indexes
+            4 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date -Year $Matches[1] -Month $Matches[2] -Day $Matches[3]) } #Daily Indexes
+            6 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date -Year $Matches[1] -Month $Matches[2] -Day $Matches[3] -Hour $Matches[5]) } #Hourly Indexes
         }
 
         return $span
