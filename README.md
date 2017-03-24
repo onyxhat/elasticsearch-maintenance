@@ -4,13 +4,13 @@ PowerShell module for common maintenance tasks in ElasticSearch.
 
 
 ###Supported APIs
-* [Delete](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/docs-delete.html)
-* [Optimize](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html)
-* [Flush](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-flush.html)
-* [Clear Cache](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-clearcache.html)
-* [Refresh](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-refresh.html)
-* [Open/Close](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-open-close.html)
-* __[More to Come](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices.html)__
+* [Delete](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html)
+* [Shrink](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-shrink-index.html)
+* [Flush](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-flush.html)
+* [Merge](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-forcemerge.html)
+* [Clear Cache](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-clearcache.html)
+* [Open/Close](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html)
+* __[More to Come](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices.html)__
 
 
 ###Requirements
@@ -25,7 +25,7 @@ PowerShell modules can be loaded by either copying the PSM1 and PSD1 files into 
 The command makes HTTP calls to the ElasticSearch server at the Server and Port you specify. By default ALL indexes present will be returned. The prefix will vary based on your use and needs, but in our case ElasticSearch is used to catalog LogStash data - so indexes look like "logstash-${YEAR}-${MONTH}-${DAY}.${HOUR}" (i.e. the IndexPrefix is "logstash").
 
 ```powershell
-Get-EsIndexes -Server <ES FQDN or IP Address [Default=localhost]> -Port <ES Port [Default=9200]> -IndexPrefix <ES Index Prefix [Default=.*]>
+Get-EsIndexes -Protocol <[http|https] [Default=http]> -Server <ES FQDN or IP Address [Default=localhost]> -Port <ES Port [Default=9200]> -IndexPrefix <ES Index Prefix [Default=.*]>
 ```
 
 
