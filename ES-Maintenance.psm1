@@ -72,8 +72,8 @@ function Get-EsIndexAge() {
     Process {
         if ($this.IndexName -match $Pattern) {
             switch($Matches.Count) {
-                4 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date ($Matches[2] + "/" + $Matches[3] + "/" + $Matches[1])) } #Daily Indexes
-                6 { $span = $(Get-Date).ToUniversalTime() - $(Get-Date ($Matches[2] + "/" + $Matches[3] + "/" + $Matches[1] + " " + $Matches[5] + ":00:00")) } #Hourly Indexes
+                4 { $span = $(Get-Date) - $(Get-Date ("$($Matches[2])/$($Matches[3])/$($Matches[1])")) } #Daily Indexes
+                6 { $span = $(Get-Date) - $(Get-Date ("$($Matches[2])/$($Matches[3])/$($Matches[1]) $($Matches[5]):00:00")) } #Hourly Indexes
             }
         }
     }
@@ -211,9 +211,17 @@ function Invoke-EsShrink() {
     }
 }
 
+function Get-EsIndexSettings() {
+    if ($this.IsOnline) {
+        $this.Output = Invoke-RestMethod -Method Get -Uri "$($this.BaseUrl)/$($this.IndexName)/_settings"
+    } else {
+        Throw "Index [$($this.IndexName)] is offline"
+    }
+}
+
 function Set-EsIndexReadOnly() {
     if ($this.IsOnline) {
-        $ShrinkNode = $this.ClusterNodes | ? { $_.data -eq $true } | Get-Random
+        $ShrinkNode = $this.ClusterNodes | ? { $_.data -eq $true } | Get-Random | Select-Object -ExpandProperty name
 
         $Settings = @{
             settings = @{
@@ -223,14 +231,6 @@ function Set-EsIndexReadOnly() {
         }
 
         $this.Output = Invoke-RestMethod -Method Put -Uri "$($this.BaseUrl)/$($this.IndexName)/_settings" -Body $Settings -ContentType 'application/json'
-    } else {
-        Throw "Index [$($this.IndexName)] is offline"
-    }
-}
-
-function Get-EsIndexSettings() {
-    if ($this.IsOnline) {
-        $this.Output = Invoke-RestMethod -Method Get -Uri "$($this.BaseUrl)/$($this.IndexName)/_settings"
     } else {
         Throw "Index [$($this.IndexName)] is offline"
     }
